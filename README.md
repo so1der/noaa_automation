@@ -1,4 +1,100 @@
+# README:  [Українська](#noaa_automation-українська) 
+
 # noaa_automation
+
+These scripts automate the reception, processing, and publication of images from NOAA satellites (18, 19) using `predict`, `rtl_fm`, `sox`, `noaa-apt`, `ImageMagick`, and the Mastodon API via Python.
+
+## Project Structure
+
+```
+$HOME/
+├── get_tle.sh               # Download TLE data for weather satellites
+├── noaa_scheduler.sh        # Schedule recording, processing, and image publishing
+├── process_image.sh         # Convert audio file to image
+├── post_image.sh            # Wrapper for poster.py
+├── move_processed_files.sh  # Move processed files
+|
+├── Recordings/              # Directory for processed audio files
+├── Pictures/                # Directory for processed images
+|
+├── noaa-apt/                # Binary and resources for noaa-apt image decoder
+│   └── noaa-apt             # Binary file for noaa-apt image decoder
+│   └── res/                 # Resources for noaa-apt image decoder
+|
+└── python-mastodon/
+    └── poster.py           # Python script for posting images to Mastodon
+```
+
+## How It Works
+
+### `get_tle.sh`
+Fetches TLE data for NOAA satellites.
+```bash
+bash get_tle.sh
+```
+
+### `noaa_scheduler.sh`
+Identifies the best pass of NOAA 18 or NOAA 19 and uses `at` to schedule:
+- signal recording (`rtl_fm` + `sox`)
+- processing (`process_image.sh`)
+- publishing (`post_image.sh`)
+```bash
+bash noaa_scheduler.sh
+```
+
+### `process_image.sh`
+- Decodes image using `noaa-apt`
+- Converts PNG to JPG and deletes the PNG
+
+### `post_image.sh`
+- Activates Python `venv`
+- Runs `poster.py`
+
+### `move_processed_files.sh`
+- Moves processed files:
+  - `.wav` to `~/Recordings`
+  - `.jpg` to `~/Pictures`
+
+## Dependencies
+
+Required packages:
+
+- `rtl_fm` (RTL-SDR)
+- `sox`
+- [`noaa-apt`](https://github.com/martinber/noaa-apt)
+- `imagemagick`
+- `at`
+- `wget`
+- Python 3 + `venv` + [`Mastodon.py`](https://mastodonpy.readthedocs.io/)
+
+## Example Usage
+
+```bash
+# Update TLE data
+bash get_tle.sh
+
+# Schedule recording, processing, and image publishing
+bash noaa_scheduler.sh
+```
+
+## Example Cron Setup:
+```cron
+0 5 * * * bash /home/ctl/noaa_scheduler.sh
+0 3 */2 * * bash /home/ctl/get_tle.sh
+```
+
+In this case, `get_tle.sh` runs every 2 days at 3 AM.
+
+`noaa_scheduler.sh` runs daily at 5 AM.
+
+## Notes
+
+- Jobs are scheduled via `at`. Ensure the atd service is active: `sudo systemctl enable atd && sudo systemctl start atd`
+- Scripts are located in the `$HOME` directory
+- Scripts operate in `~/noaa-apt/` and `~/python-mastodon/`
+
+
+# noaa_automation Українська:
 
 За допомогою цих скриптів можна автоматизувати прийом, обробку та публікацію зображень з супутників NOAA (18, 19), використовуючи `predict`, `rtl_fm`, `sox`, `noaa-apt`, `ImageMagick`, та Mastodon API через Python.
 
