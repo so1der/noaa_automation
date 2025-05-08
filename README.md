@@ -59,6 +59,7 @@ bash noaa_scheduler.sh
 
 Required packages:
 
+- [`predict`](https://www.qsl.net/kd2bd/predict.html)
 - `rtl_fm` (RTL-SDR)
 - `sox`
 - [`noaa-apt`](https://github.com/martinber/noaa-apt)
@@ -153,6 +154,7 @@ bash noaa_scheduler.sh
 
 Потрібні пакети:
 
+- [`predict`](https://www.qsl.net/kd2bd/predict.html)
 - `rtl_fm` (RTL-SDR)
 - `sox`
 - [`noaa-apt`](https://github.com/martinber/noaa-apt)
