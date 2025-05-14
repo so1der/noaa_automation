@@ -41,7 +41,7 @@ image="${sat}_$(date -d @$start_pass +%d_%m_%y_%H%M%S).jpg"
 
 # Schedule the command execution for satellite pass recording, image processing, and publishing image to Mastodon
 # 'sleep' is used to achieve second precision, since 'at' does not work with seconds
-echo "sleep $(date -d @$start_pass +%S); /usr/local/bin/rtl_fm -f $freq -s 110250 -g 49.6 -p 0 -F 1 -E deemp | sox -t raw -r 110250 -e signed -b16 -c1 - $filename trim 0 900" | at $(date -d @$start_pass +%H%M)
+echo "sleep $(date -d @$start_pass +%S); /usr/local/bin/rtl_fm -f $freq -s 80k -g 49.6 -p 0 -F 9 -E dc | sox -t raw -r 80k -e signed -b16 -c1 - $filename trim 0 900" | at $(date -d @$start_pass +%H%M)
 echo "bash process_image.sh $filename $start_pass" | at $(date -d @$process_image_time +%H%M)
 echo "bash post_image.sh $image \"$elev\" \"$formated_date\" && bash move_processed_files.sh $filename $image" | at $(date -d @$posting_image_time +%H%M) 
 
